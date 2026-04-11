@@ -1,0 +1,25 @@
+Objective
+Predict whether an exoplanet is likely to be detected via the Radial Velocity method based on stellar and orbital properties.
+This reframes astronomy as a resource-allocation & decision-support problem.
+
+🔁 Input → Output
+Input (X):
+•	Stellar properties
+(st_teff, st_mass, st_rad, st_met, st_logg)
+•	Orbital parameters
+(pl_orbper, pl_orbsmax, pl_orbeccen)
+•	Planet physical properties
+(pl_bmasse, pl_rade, pl_insol)
+•	System metadata
+(sy_dist, sy_vmag, sy_gaiamag)
+Output (y):
+•	Binary label:
+is_radial_velocity_detectable
+(1 = detected via Radial Velocity, 0 = other method)
+
+
+Success Criteria
+•	ROC-AUC ≥ 0.80 on untouched test set
+•	Stable performance across stellar mass & distance segments
+•	Feature importance aligns with astrophysics intuition
+📌 No dataset touched yet.
