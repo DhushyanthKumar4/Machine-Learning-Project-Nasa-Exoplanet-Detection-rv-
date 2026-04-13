@@ -1,0 +1,71 @@
+Reflections: 
+
+What Surprised Me
+•	How strong discovery bias dominates physics
+•	How few features explain most signal
+•	Transit vs RV are fundamentally different populations
+
+
+What Failed
+•	Stellar metallicity had weak predictive power
+•	Very long-period planets confused all models
+•	Distance alone is not enough without brightness
+
+
+Surprises & Key Observations
+•	Systematic missingness dominates:
+o	As expected, RV-detected planets often lack radius measurements, and Transit-detected planets often lack mass. This confirmed that missingness is method-dependent, not random.
+•	Right-skewed distributions:
+o	Both orbital period and planet mass are extremely right-skewed, as anticipated from observational biases (small, low-mass planets are harder to detect). Log transforms were essential for modeling.
+•	Physical relationships were captured by the model:
+o	SHAP feature importance aligned with expectations:
+	rv_signal_proxy and mass_ratio were strong positive contributors.
+	Longer orbital periods (log_orbper) had negative SHAP contributions, reflecting survey limitations.
+•	Distance-adjusted brightness mattered:
+o	As expected, more distant systems are less likely to have RV measurements due to SNR limits.
+
+
+What Worked Well
+•	Pipeline rigor:
+o	Using a ColumnTransformer with imputation + robust scaling and limited one-hot encoding allowed for zero-leakage preprocessing.
+•	Feature engineering encoded physics:
+o	Mass ratio, RV proxy, and log-scaled periods captured astrophysical detectability in a way simple statistical features could not.
+•	Stratified splitting prevented leakage:
+o	By stratifying on planet_id, no planet appears in multiple splits, ensuring realistic evaluation.
+•	Explainability:
+o	SHAP validated that the model’s decisions make physical sense, increasing trust for astronomers.
+
+
+Challenges & Lessons Learned
+•	Imbalanced classes:
+o	RV planets are less frequent than Transit planets, so careful stratification and evaluation metrics (ROC-AUC, PR-AUC) were essential.
+•	Extreme values & outliers:
+o	Some orbital periods exceeded 10,000 days or had negative values; capping and cleaning were necessary to prevent model distortion.
+•	Sensitivity to missing features:
+o	Dropping pl_bmassj reduced performance gracefully, showing the model is robust but highlights dependence on key physical measurements.
+•	Survey bias is unavoidable:
+o	Model performance varies with discovery era, reflecting that older surveys had limited sensitivity.
+
+
+What Could Be Improved / Future Work
+•	Instrument-aware modeling:
+o	Incorporate instrument characteristics to explicitly model detection biases.
+•	Hierarchical modeling:
+o	Treat stars as random effects to better handle multiple planets per system.
+•	Uncertainty quantification:
+o	Integrate predictive uncertainties (e.g., conformal prediction) for telescope time optimization.
+•	Additional physics-based features:
+o	Include eccentricity, stellar metallicity, and incident flux in more sophisticated combinations.
+•	Temporal generalization:
+o	Test model robustness on future survey data (e.g., TESS, PLATO).
+
+
+Takeaways for Astronomers & ML Practitioners
+•	ML can optimize follow-up strategies, not discover planets directly.
+•	Carefully engineered features grounded in physics outperform naive models.
+•	Systematic biases in the dataset (method, distance, stellar type) are as important as algorithm choice.
+•	Explainable AI (SHAP) provides a bridge between model predictions and physical intuition, making the results credible for telescope scheduling decisions.
+
+
+Summary:
+This project demonstrates that careful feature engineering, bias-aware splitting, and robust pipelines can produce interpretable ML models that respect astrophysical constraints and meaningfully support exoplanet follow-up prioritization.
